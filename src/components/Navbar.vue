@@ -26,7 +26,7 @@
         </v-btn>
         <div v-else class="d-flex my-auto mx-2">
           <span class="mx-4 text-xl font-semibold">
-            Olá {{ userData.name }}
+            Olá {{ userData.currentUser }}
           </span>
           <v-tooltip text="Sair" location="bottom">
             <template v-slot:activator="{ props }">
@@ -117,29 +117,33 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem("user");
-      this.$emit("logout");
-      this.$router.push("/");
+      this.$api.logout().then(_ => {
+        localStorage.removeItem("user");
+        this.$emit("logout");
+        this.$router.push("/");
+      }).catch(err => {
+        return this.$toast.error(err.message);
+      })
     },
     login() {
       console.log(this.username);
       if (!this.username) return this.$toast.error("Campo obrigatório.");
       if (this.username.length < 4)
         return this.$toast.error("Nome muito curto.");
-      if (this.username.length > 20)
+      if (this.username.length > 16)
         return this.$toast.error("Nome muito logno.");
 
-      let user = {
-        id: crypto.randomUUID().split("-").join(""),
-        name: this.username,
-      };
-
-      localStorage.setItem("user", JSON.stringify(user));
-      this.loginDialog = false;
-      this.$emit("logged");
-      this.$router.push("/");
+      this.$api.login(this.username).then(res => {
+        let user = res.data;
+        localStorage.setItem("user", JSON.stringify(user));
+        this.loginDialog = false;
+        this.$emit("logged");
+        this.$router.push("/");
+      }).catch(err => {
+        return this.$toast.error(err.message);
+      })
     },
-  },
+  }
 };
 </script>
 

@@ -36,7 +36,7 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="isUserLogged">
       <v-col class="d-flex justify-center">
         <div
           class="mt-4 w-1/2 d-flex justify-center border-4 border-[#fff] hover:bg-[#ffffff11] active:bg-[#ffffff28] cursor-pointer rounded-lg text-center py-4"
@@ -64,5 +64,14 @@
 <script>
 export default {
   name: "HomeView",
+  props: {
+    userLogged: Boolean,
+    userData: Object,
+  },
+  computed: {
+    isUserLogged: function () {
+      return this.userLogged;
+    },
+  },
 };
 </script>

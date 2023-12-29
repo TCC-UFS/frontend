@@ -7,7 +7,7 @@
         :userLogged="userLogged"
         :userData="user"
       />
-      <router-view />
+      <router-view :userLogged="userLogged" :userData="user" />
       <v-spacer />
       <Footer />
     </v-main>
