@@ -34,7 +34,6 @@ app.config.globalProperties.$login = USER;
 app.config.globalProperties.$pass = PWD;
 app.config.globalProperties.$channel = await new Promise((resolve, reject) => {
   client.connect({ host: 'chat_sd', login: USER, passcode: PWD }, () => {
-    console.log('RabbitMQ Connected!');
     resolve(client);
   }, (err) => {
     reject(err);
