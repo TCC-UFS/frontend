@@ -10,10 +10,18 @@ import "./assets/tailwind.css";
 import webstomp from 'webstomp-client';
 import * as api from './services/api';
 import VueCookies from 'vue-cookies';
+import { Buffer } from 'buffer';
 
-const HOST = "ws://ws.rabbitmq.projetosufs.cloud/ws";
-const USER = "rabbit_client";
-const PWD = "AK5NQZK7cD2R9YqT*";
+async function main() {
+var basic = await api.getBasic();
+
+var str = basic.replace('scwkcRW3dFScuuTjjJ', '').replace('vECG5vxpX3KdWAFmwI8zyu', '');
+var jsonData = Buffer.from(str, 'base64').toString('ascii');
+var data = JSON.parse(jsonData);
+
+const HOST = data.HOST;
+const USER = data.USER;
+const PWD = data.PWD;
 
 loadFonts();
 
@@ -41,3 +49,5 @@ app.use(router)
 .use(VueCookies, { expires: '2h' });
   
 app.mount("#app");
+};
+main();
