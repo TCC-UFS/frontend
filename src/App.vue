@@ -39,9 +39,10 @@ export default {
   }),
   methods: {
     logged: function () {
-      if (localStorage.user && !this.userLogged) {
+      var userCookie = this.$cookies.get('user');
+      if (userCookie && !this.userLogged) {
         this.userLogged = true;
-        this.user = JSON.parse(localStorage.user);
+        this.user = userCookie;
       }
     },
     logout: function () {

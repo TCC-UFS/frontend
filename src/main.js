@@ -9,10 +9,11 @@ import "vue-toast-notification/dist/theme-default.css";
 import "./assets/tailwind.css";
 import webstomp from 'webstomp-client';
 import * as api from './services/api';
+import VueCookies from 'vue-cookies';
 
-const HOST = ""
-const USER = "";
-const PWD = "";
+const HOST = "ws://ws.rabbitmq.projetosufs.cloud/ws";
+const USER = "rabbit_client";
+const PWD = "AK5NQZK7cD2R9YqT*";
 
 loadFonts();
 
@@ -32,8 +33,11 @@ app.config.globalProperties.$channel = await new Promise((resolve, reject) => {
   });
 });
 
+
 app.use(router)
-  .use(store)
-  .use(vuetify)
-  .use(ToastPlugin)
-  .mount("#app");
+.use(store)
+.use(vuetify)
+.use(ToastPlugin)
+.use(VueCookies, { expires: '2h' });
+  
+app.mount("#app");

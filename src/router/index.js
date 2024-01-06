@@ -8,13 +8,10 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/global",
-    name: "ChatGlobal",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    path: "/chats/personal",
+    name: "PersonalChat",
     component: function () {
-      return import(/* webpackChunkName: "about" */ "../views/ChatGlobal.vue");
+      return import("../views/PersonalChat.vue");
     },
   },
 ];

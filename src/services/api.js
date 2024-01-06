@@ -19,17 +19,18 @@ const login = async (userName) => {
       setAuthToken(res.data.id);
 
     return res;
-  }).catch(err => { throw new Error(err.error) });
+  }).catch(err => { throw new Error(err.response?.data?.error || err.message) });
 }
 
 const logout = async () => {
   return api.post('/logout').then(_ => {
     clearAuthToken(null);
-  }).catch(err => { throw new Error(err.error) });
+  }).catch(err => { console.log(err); throw new Error(err.response?.data?.error || err.message) });
 }
 
 const sendMessage = async (message, to, userId) => {
-  return api.post('/message', { to, message }, { headers: { "Content-Type": "application/json", "x-user-id": userId } });
+  return api.post('/message', { to, message }, { headers: { "Content-Type": "application/json", "x-user-id": userId } })
+            .catch(err => { throw new Error(err.response?.data?.error || err.message) });
 }
 
 const listChats = async (userId) => {
@@ -37,7 +38,7 @@ const listChats = async (userId) => {
   .then(res => {
     return res.data;
   })
-  .catch(err => { console.log(err); throw new Error(err.error) });
+  .catch(err => { throw new Error(err.response?.data?.error || err.message) });
 }
 
 export { login, logout, sendMessage, listChats }

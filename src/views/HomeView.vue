@@ -40,12 +40,13 @@
       <v-col class="d-flex justify-center">
         <div
           class="mt-4 w-1/2 d-flex justify-center border-4 border-[#fff] hover:bg-[#ffffff11] active:bg-[#ffffff28] cursor-pointer rounded-lg text-center py-4"
-          @click="$router.push('global')"
+          @click="$router.push('chats/personal')"
         >
-          <div class="font-bold text-2xl">Chat Global</div>
+          <div class="font-bold text-2xl">Chat Pessoal</div>
         </div>
       </v-col>
     </v-row>
+    <v-row v-if="$vuetify.display.mobile" class="mb-72"></v-row>
   </v-container>
 </template>
 

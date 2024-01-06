@@ -2,9 +2,9 @@
   <div>
     <div class="d-flex w-100 px-4 py-2 bg-slate-950">
       <div class="d-flex my-auto mr-2">
-        <img class="w-8" :src="require('../assets/logo.png')" />
+        <img class="w-8" :src="require('../assets/logo.png')" @click="$router.push('/')" />
       </div>
-      <ul class="d-flex w-fit justify-start my-auto">
+      <ul class="d-flex w-fit justify-start my-auto" v-if="!$vuetify.display.mobile">
         <li v-for="item in items" :key="item.id">
           <div
             @click="$router.push(item.path)"
@@ -39,7 +39,7 @@
           </v-tooltip>
         </div>
       </div>
-      <v-dialog v-model="loginDialog" class="w-1/4">
+      <v-dialog v-model="loginDialog" class="w-1/4 min-w-[350px]">
         <v-card class="d-flex justify-center p-5">
           <v-card-title class="text-center">Nome</v-card-title>
           <v-card-text class="text-left">
@@ -118,7 +118,7 @@ export default {
   methods: {
     logout() {
       this.$api.logout().then(_ => {
-        localStorage.removeItem("user");
+        this.$cookies.remove('user');
         this.$emit("logout");
         this.$router.push("/");
       }).catch(err => {
@@ -126,7 +126,6 @@ export default {
       })
     },
     login() {
-      console.log(this.username);
       if (!this.username) return this.$toast.error("Campo obrigatório.");
       if (this.username.length < 4)
         return this.$toast.error("Nome muito curto.");
@@ -135,7 +134,7 @@ export default {
 
       this.$api.login(this.username).then(res => {
         let user = res.data;
-        localStorage.setItem("user", JSON.stringify(user));
+        this.$cookies.set('user', JSON.stringify(user), 60*60*4);
         this.loginDialog = false;
         this.$emit("logged");
         this.$router.push("/");
