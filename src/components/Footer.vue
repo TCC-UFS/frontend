@@ -44,19 +44,12 @@
             <h1 class="font-semibold text-regular">2023.2</h1>
           </div>
         </v-row>
-        <v-row class="mt-4">
-          <div class="d-flex">
-            <img
-              :src="require('../assets/logo-dcomp.svg')"
-              class="my-auto mr-5"
-              width="80"
-            />
-            <img
-              :src="require('../assets/logo-ufs.png')"
-              class="my-auto ml-4"
-              width="180"
-            />
-          </div>
+        <v-row class="mt-4 d-flex justify-center">
+          <img
+            :src="require('../assets/logo-dcomp.svg')"
+            class="mb-1"
+            width="80"
+          />
         </v-row>
       </v-col>
     </div>

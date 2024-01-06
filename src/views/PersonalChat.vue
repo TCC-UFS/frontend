@@ -27,25 +27,33 @@
     </v-row>
     <v-row v-if="!$vuetify.display.mobile">
       <v-col class="d-flex flex-col items-center">
-        <div class="d-flex w-full justify-center">
+        <div class="d-flex w-full justify-center relative">
           <div class="userList">
+            <div class="text-center">Chats</div>
+            <hr class="mt-1" />
+            <div v-if="chats.length === 0" class="p-2">
+              Nenhum chat online.
+            </div>
             <div v-for="u in chats" @click="to=u; scrollBottom()" :key="u"
-              :class="['hover:text-white p-2 cursor-pointer', to === u ? 'bg-[#ff6600ef]' : 'hover:bg-[#ff6600df]']">
-              {{u}}
+              :class="['hover:text-white pt-2 cursor-pointer', to === u ? 'bg-[#ff6600ef]' : 'hover:bg-[#ff6600df]']">
+              <span class="p-2">{{u}}</span>
+              <hr class="mt-2" />
             </div>
           </div>
+          <div class="absolute pl-[15rem]" v-if="to">
+            <div class="text-white bg-[#388f99] px-2 pb-[0.2rem] chip">{{to.slice(1)}}</div>
+          </div>
           <div class="d-flex flex-col items-center chat-box">
-            <div id="chatbox" class="bg-white text-lg chat d-flex flex-col">
-              <!-- <div class="absolute bottom-0 w-full d-flex flex-col"> -->
-                <div v-for="(msg, index) in messagesArr" :key="index" :class="`d-flex flex-col`">
-                  <div :class="`py-1 w-fit my-auto ${msg.isSender ? 'pr-3 pl-8 mb-2 mr-2 self-end text-right' : 'pl-3 pr-8 mb-2 ml-2 text-left'}`">
-                    <span class="text-black font-extrabold my-auto">{{ msg.sender }}</span>
-                    <div>
-                      <span class="text-gray-800 font-bold">{{ '  ' }} {{ msg.message }}</span>
-                    </div>
+            <div id="chatbox" class="bg-white text-lg chat d-flex flex-col chat-web">
+              <div v-for="(msg, index) in messagesArr" :key="index" :class="`d-flex flex-col`">
+                <div :class="`py-1 w-fit my-auto ${msg.isSender ? 'pr-3 pl-8 mb-2 mr-2 self-end text-right' : 'pl-3 pr-8 mb-2 ml-2 text-left'}`">
+                  <span class="text-black font-extrabold my-auto">{{ msg.sender }}</span>
+                  <div>
+                    <span class="text-gray-800 font-bold">{{ '  ' }} {{ msg.message }}</span>
                   </div>
                 </div>
-              <!-- </div> -->
+              </div>
+              
             </div>
             <div class="w-[100%] d-flex justify-center">
               <v-text-field id="message-input" base-color="#fff" bg-color="#388f99" color="#fff" variant="solo" class="w-[50%]" elevation="5" v-model="myMessage" label="Mensagem" @keyup.enter="sendMessage()" append-inner-icon="mdi-send" @click:append-inner="sendMessage()" />
@@ -58,11 +66,14 @@
     <v-row v-else>
       <v-col class="d-flex flex-col items-center mt-2">
         <v-row class="chats-mobile justify-center text-center">
-          <v-select bg-color="#005163" base-color="#fff" item-color="#f60" :items="chats" v-model="to" variant="solo" label="Destinatário" no-data-text="Nenhum usuário online." />
+          <v-select bg-color="#005163" base-color="#fff" item-color="#f60" :items="chats" v-model="to" variant="solo" label="Chats" no-data-text="Nenhum chat online." />
         </v-row>
-        <v-row class="w-full justify-center">
+        <v-row class="w-full justify-center relative">
+          <div class="absolute" v-if="to">
+            <div class="text-white bg-[#388f99] px-2 pb-[0.2rem] chip-mobile">{{to.slice(1)}}</div>
+          </div>
           <div class="d-flex flex-col items-center chat-box-mobile">
-            <div id="chatbox" class="bg-white text-lg chat d-flex flex-col">
+            <div id="chatbox" class="bg-white text-lg chat border-[#388f99] border-4 d-flex flex-col">
               <div v-for="(msg, index) in messagesArr" :key="index" :class="`d-flex flex-col`">
                 <div :class="`py-1 w-fit my-auto ${msg.isSender ? 'pr-3 pl-8 mb-2 mr-2 self-end text-right' : 'pl-3 pr-8 mb-2 ml-2 text-left'}`">
                   <span class="text-black font-extrabold my-auto">{{ msg.sender }}</span>
@@ -111,6 +122,15 @@
   scrollbar-width: none;
 }
 
+.chip {
+  border-top: 4px solid #005163;
+  border-radius: 0 0 12px 12px;
+}
+
+.chip-mobile {
+  border-radius: 0 0 12px 12px; 
+}
+
 .chat-box {
   width: 40%;
 }
@@ -139,6 +159,11 @@
 }
 .chat > :last-child {
   overflow-anchor: auto;
+}
+
+.chat-web {
+  border-top: 4px solid #005163;
+  border-right: 4px solid #005163;
 }
 
 .orange {
@@ -191,7 +216,7 @@ export default {
     },
     sendMessage() {
       if (!this.to)
-        return this.$toast.error("Nenhum desetinatário selecionado.");
+        return this.$toast.error("Nenhum chat selecionado.");
       
       if (!this.myMessage) return;
 
