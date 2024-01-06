@@ -57,8 +57,10 @@ export default {
     this.$api.api.interceptors.response.use((response) => {
       return response;
     }, (err) => {
-      if (err.statusCode === 401);
-      this.logout();
+      if (err.response.status === 401) {
+        this.logout();
+      }
+
       return Promise.reject(err);
     })
   },
