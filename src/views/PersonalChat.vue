@@ -34,10 +34,14 @@
             <div v-if="chats.length === 0" class="p-2">
               Nenhum chat online.
             </div>
-            <div v-for="u in chats" @click="to=u; scrollBottom()" :key="u"
-              :class="['hover:text-white pt-2 cursor-pointer', to === u ? 'bg-[#ff6600ef]' : 'hover:bg-[#ff6600df]']">
-              <span class="p-2">{{u}}</span>
-              <hr class="mt-2" />
+            <div v-for="chat in chats" @click="changeTo(chat)" :key="chat"
+              :class="['hover:text-white cursor-pointer', to === chat ? 'bg-[#ff6600ef]' : 'hover:bg-[#ff6600df]']">
+              <div class="d-flex">
+                <span class="p-2">{{chat}}</span>
+                <v-spacer />
+                <v-icon v-if="notifications.includes(chat)" icon="mdi-bell-ring" class="my-auto pr-4" size="small" />
+              </div>
+              <hr />
             </div>
           </div>
           <div class="absolute pl-[15rem]" v-if="to">
@@ -185,6 +189,7 @@ export default {
     messages: [],
     myMessage: "",
     to: "",
+    notifications: [],
     chats: []
   }),
   props: {
@@ -205,8 +210,17 @@ export default {
   methods: {
     onMessage(frame) {
       let msg = JSON.parse(frame.body);
+      if (this.to?.slice(1) !== msg.sender.toLowerCase()) {
+        this.notifications.push(`@${msg.sender.toLowerCase()}`)
+      }
       this.messages.push(msg);
       this.scrollBottom(10);
+    },
+    changeTo(chat) {
+      this.to = chat;
+      let index = this.notifications.findIndex(n => n === chat)
+      if (index > -1) this.notifications.splice(index, 1);
+      this.scrollBottom();
     },
     scrollBottom(delay = 0) {
       setTimeout(() => {
