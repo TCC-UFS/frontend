@@ -53,6 +53,14 @@ export default {
   },
   mounted() {
     this.logged();
+
+    this.$api.api.interceptors.response.use((response) => {
+      return response;
+    }, (err) => {
+      if (err.statusCode === 401);
+      this.logout();
+      return Promise.reject(err);
+    })
   },
 };
 </script>
