@@ -1,30 +1,6 @@
 <template>
   <v-container>
-    <v-row class="text-center mt-2">
-      <v-col v-if="$vuetify.display.mobile" class="d-flex justify-center">
-        <v-img
-          :src="require('../assets/logo.png')"
-          class="my-auto"
-          contain
-          max-width="100"
-        />
-      </v-col>
-      <v-col cols="12 d-flex justify-center">
-        <v-img v-if="!$vuetify.display.mobile"
-          :src="require('../assets/logo.png')"
-          class="my-auto mr-5"
-          contain
-          max-width="150"
-        />
-        <span class="text-left font-mono font-extrabold text-8xl my-auto">
-          <span>Chat</span>
-          <span class="cyan">M</span><span class="orange">Q</span>
-        </span>
-      </v-col>
-      <!-- <v-col class="d-flex flex-col items-center">
-        <span class="d-flex text-center font-extrabold font-mono text-white text-4xl">Chat Pessoal</span>
-      </v-col> -->
-    </v-row>
+    <Logo />
     <v-row v-if="!$vuetify.display.mobile">
       <v-col class="d-flex flex-col items-center">
         <div class="d-flex w-full justify-center relative">
@@ -182,6 +158,8 @@
 </style>
 
 <script>
+import Logo from '../components/Logo.vue'
+
 export default {
   name: "PersonalChat",
   data: () => ({
@@ -192,6 +170,9 @@ export default {
     notifications: [],
     chats: []
   }),
+  components: {
+    Logo
+  },
   props: {
     userLogged: Boolean,
     userData: Object,
@@ -214,6 +195,7 @@ export default {
         this.notifications.push(`@${msg.sender.toLowerCase()}`)
       }
       this.messages.push(msg);
+      this.$cookies.set('messages', this.messages);
       this.scrollBottom(10);
     },
     changeTo(chat) {
@@ -236,6 +218,7 @@ export default {
 
       this.$api.sendMessage(this.myMessage, this.to, this.userData.id).then(_ => {
         this.messages.push({isSender: true, sender: this.userData.currentUser, message: this.myMessage, to: this.to});
+        this.$cookies.set('messages', this.messages);
         this.myMessage = "";
         this.scrollBottom(10);
       })
@@ -244,6 +227,8 @@ export default {
   },
   mounted() {
     if (this.isUserLogged) {
+      var messages = this.$cookies.get('messages');
+      if (messages) this.messages = messages;
       this.interval = setInterval(() => {
         this.$api.listChats(this.userData.id).then(res => this.chats = res.chats.filter(u => u != `@${this.userData.currentUser.toLowerCase()}`))
           .catch(err => this.$toast.error(err.message || err.error || err));

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 var api = axios.create({
-  baseURL: 'http://localhost:3000/api'
+  baseURL: 'https://chatmq-api.projetosufs.cloud/api'
 });
 
 
@@ -13,8 +13,8 @@ const clearAuthToken = () => {
   api.defaults.headers.common["x-user-id"] = null;
 }
 
-const getBasic = () => {
-  return api.get('/basic?from=bZelXcVrsRHHYVCdwaT7dvECG5vxpX3KdWAFmwI8zyugl2Ovhjp34aefkBRlduAUNzZlVZ08STr6xU20JTscwkcRW3dFScuuTjjJjFVB4kTuezpam9uhDJDBQ37PITH2rVriJXc958uPEfvmPAXwwEwazjgiKfXuRJ2ETZmdMzwoD6iEGZv6xIu7qg5WfbRF6s1LpriNQ2ZND0dguPrKMDfofwSG10UzIaJ2CoCJpshgytXIF2DZNMaoQ0vUkA7pDEacsmJf4POx2wSgKw6KHxJJTJCn8TUIpcf8FQIQS2tlV27zPoV5Eho7IQFlo9mR')
+const getBasic = (https = false) => {
+  return api.get(`/basic?secure=${https ? "yes" : "no"}&from=bZelXcVrsRHHYVCdwaT7dvECG5vxpX3KdWAFmwI8zyugl2Ovhjp34aefkBRlduAUNzZlVZ08STr6xU20JTscwkcRW3dFScuuTjjJjFVB4kTuezpam9uhDJDBQ37PITH2rVriJXc958uPEfvmPAXwwEwazjgiKfXuRJ2ETZmdMzwoD6iEGZv6xIu7qg5WfbRF6s1LpriNQ2ZND0dguPrKMDfofwSG10UzIaJ2CoCJpshgytXIF2DZNMaoQ0vUkA7pDEacsmJf4POx2wSgKw6KHxJJTJCn8TUIpcf8FQIQS2tlV27zPoV5Eho7IQFlo9mR`)
   .then(res => {
     return res.data;
   }).catch(err => console.log(err));
@@ -29,8 +29,8 @@ const login = async (userName) => {
   }).catch(err => { throw new Error(err.response?.data?.error || err.message) });
 }
 
-const logout = async () => {
-  return api.post('/logout').then(_ => {
+const logout = async (userId) => {
+  return await api.post('/logout', { headers: { "x-user-id": userId } }).then(_ => {
     clearAuthToken(null);
   }).catch(err => { console.log(err); throw new Error(err.response?.data?.error || err.message) });
 }

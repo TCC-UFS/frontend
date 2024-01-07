@@ -1,19 +1,6 @@
 <template>
   <v-container>
-    <v-row class="text-center mt-2">
-      <v-col cols="12 d-flex justify-center">
-        <v-img
-          :src="require('../assets/logo.png')"
-          class="my-auto"
-          contain
-          max-width="150"
-        />
-        <span class="text-left ml-5 font-mono font-extrabold text-8xl my-auto">
-          <span>Chat</span>
-          <span class="cyan">M</span><span class="orange">Q</span>
-        </span>
-      </v-col>
-    </v-row>
+    <Logo />
     <v-row>
       <v-col class="d-flex justify-center">
         <div
@@ -63,11 +50,16 @@
 </style>
 
 <script>
+import Logo from '../components/Logo.vue'
+
 export default {
   name: "HomeView",
   props: {
     userLogged: Boolean,
     userData: Object,
+  },
+  components: {
+    Logo
   },
   computed: {
     isUserLogged: function () {

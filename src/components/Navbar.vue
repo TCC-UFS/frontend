@@ -82,23 +82,23 @@ export default {
     rules: {
       required: (value) => !!value || "Campo obrigatório.",
       min: (value) => value.length >= 4 || "Mínimo 4 caracteres.",
-      max: (value) => value.length <= 20 || "Máximo 20 caracteres.",
+      max: (value) => value.length <= 16 || "Máximo 16 caracteres.",
     },
     items: [
       {
-        id: crypto.randomUUID(),
+        id: "1412d0fb-a0ee-4528-b3c0-80c0df81d5a1",
         text: "Home",
         icon: "mdi-home",
         path: "/",
       },
       {
-        id: crypto.randomUUID(),
+        id: "8a9aa797-e724-4037-a889-a54d59f4ad6c",
         text: "Grupos",
         icon: "mdi-account-group",
         path: "/groups",
       },
       {
-        id: crypto.randomUUID(),
+        id: "a16750ca-b748-4bf2-80f5-9ff6477d8d2a",
         text: "Usuarios",
         icon: "mdi-account-multiple",
         path: "/users",
@@ -117,8 +117,9 @@ export default {
   },
   methods: {
     logout() {
-      this.$api.logout().then(_ => {
+      this.$api.logout(this.userData.id).then(_ => {
         this.$cookies.remove('user');
+        this.$cookies.remove('messages');
         this.$emit("logout");
         this.$router.push("/");
       }).catch(err => {
@@ -135,6 +136,7 @@ export default {
       this.$api.login(this.username).then(res => {
         let user = res.data;
         this.$cookies.set('user', JSON.stringify(user), 60*60*4);
+        this.$cookies.set('messages', JSON.stringify([]), 60*60*4);
         this.loginDialog = false;
         this.$emit("logged");
         this.$router.push("/");
