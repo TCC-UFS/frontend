@@ -1,4 +1,4 @@
-# LegisAmb
+# Portal Legislativo Ambiental
 
 ## Project setup
 ```
